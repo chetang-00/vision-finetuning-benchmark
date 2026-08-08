@@ -31,12 +31,12 @@ def _fractional_subset(dataset: Any, fraction: float, seed: int) -> Dataset:
 
 
 def build_dataloaders(config: DataConfig, seed: int = 42) -> DataBundle:
-    train_transform, evaluation_transform = build_transforms(
-        config.image_size, config.augmentation
-    )
+    train_transform, evaluation_transform = build_transforms(config.image_size, config.augmentation)
     root = Path(config.root)
 
-    full_train_aug = Food101(root, split="train", transform=train_transform, download=config.download)
+    full_train_aug = Food101(
+        root, split="train", transform=train_transform, download=config.download
+    )
     full_train_eval = Food101(
         root, split="train", transform=evaluation_transform, download=config.download
     )

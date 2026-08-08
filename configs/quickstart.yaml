@@ -1,7 +1,7 @@
 project:
   name: foodvision-quickstart
   seed: 42
-  output_dir: artifacts/quickstart
+  output_dir: artifacts/quickstart/resnet50-frozen
 
 data:
   root: data
@@ -48,8 +48,7 @@ tracking:
 
 inference:
   backend: pytorch
-  checkpoint: artifacts/quickstart/best.pt
-  onnx_model: artifacts/quickstart/model.onnx
+  checkpoint: artifacts/quickstart/resnet50-frozen/best.pt
+  onnx_model: artifacts/quickstart/resnet50-frozen/model.onnx
   top_k: 5
   warmup_iterations: 3
-

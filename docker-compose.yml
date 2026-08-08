@@ -8,7 +8,7 @@ services:
       - "8000:8000"
     environment:
       FOODVISION_CONFIG: configs/quickstart.yaml
-      FOODVISION_CHECKPOINT: artifacts/best.pt
+      FOODVISION_CHECKPOINT: artifacts/quickstart/resnet50-frozen/best.pt
     volumes:
       - ./artifacts:/app/artifacts:ro
 
@@ -21,7 +21,7 @@ services:
       - "8000:8000"
     environment:
       FOODVISION_CONFIG: configs/base.yaml
-      FOODVISION_CHECKPOINT: artifacts/best.pt
+      FOODVISION_CHECKPOINT: artifacts/resnet50/partial/best.pt
     volumes:
       - ./artifacts:/app/artifacts:ro
     deploy:
@@ -31,4 +31,3 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
-

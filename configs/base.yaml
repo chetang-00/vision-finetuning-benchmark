@@ -1,7 +1,7 @@
 project:
   name: foodvision-production-platform
   seed: 42
-  output_dir: artifacts
+  output_dir: artifacts/resnet50/partial
 
 data:
   root: data
@@ -48,8 +48,7 @@ tracking:
 
 inference:
   backend: pytorch
-  checkpoint: artifacts/best.pt
-  onnx_model: artifacts/model.onnx
+  checkpoint: artifacts/resnet50/partial/best.pt
+  onnx_model: artifacts/resnet50/partial/model.onnx
   top_k: 5
   warmup_iterations: 5
-

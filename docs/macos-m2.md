@@ -23,7 +23,7 @@ Run the quickstart using 10% of Food-101 and a frozen ResNet50 backbone:
 python scripts/train.py --config configs/quickstart.yaml --device mps
 ```
 
-Full Food-101 experiments are configured in `configs/base.yaml`. Start with batch size 16. If memory pressure occurs, reduce the batch size to 8 and increase `accumulation_steps` to preserve the effective batch size.
+Full Food-101 defaults are configured in `configs/base.yaml`. Generate isolated model/strategy configurations with `python scripts/run_experiment_matrix.py --base configs/base.yaml`, then run one generated configuration at a time. Start with batch size 16. If memory pressure occurs, reduce the batch size to 8 and increase `accumulation_steps` to preserve the effective batch size.
 
 ## Apple-specific limitations
 
@@ -31,4 +31,3 @@ Full Food-101 experiments are configured in `configs/base.yaml`. Start with batc
 - Automatic mixed precision is kept conservative by default on MPS. Set `training.precision: fp16` only after confirming the selected model is stable.
 - `torch.compile` is intentionally disabled in the predictor on MPS because support varies by operation and PyTorch release.
 - MPS reports allocated memory, but it does not expose the same utilization telemetry as `nvidia-smi`.
-

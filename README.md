@@ -98,7 +98,7 @@ Generate the 4 × 3 model/fine-tuning matrix:
 python scripts/run_experiment_matrix.py --base configs/base.yaml
 ```
 
-This creates twelve configurations under `configs/generated/`:
+This creates twelve configurations under model-specific folders in `configs/generated/`:
 
 | Architecture | Frozen | Partial | Full |
 |---|---:|---:|---:|
@@ -110,7 +110,9 @@ This creates twelve configurations under `configs/generated/`:
 Run one experiment at a time:
 
 ```bash
-python scripts/train.py --config configs/generated/convnext_tiny-partial.yaml --device mps
+python scripts/train.py \
+  --config configs/generated/convnext_tiny/partial.yaml \
+  --device mps
 ```
 
 Run the complete matrix only on hardware and within a compute budget you control:
@@ -120,6 +122,19 @@ python scripts/run_experiment_matrix.py --base configs/base.yaml --run
 ```
 
 ResNet101 and ViT-Tiny remain available through the model factory for additional controlled experiments.
+
+Every model and fine-tuning strategy has an isolated artifact directory:
+
+```text
+artifacts/
+├── quickstart/resnet50-frozen/
+├── resnet50/{frozen,partial,full}/
+├── efficientnet_b0/{frozen,partial,full}/
+├── convnext_tiny/{frozen,partial,full}/
+└── vit_b_16/{frozen,partial,full}/
+```
+
+Training checkpoints, evaluation reports, benchmarks, and ONNX exports for one experiment stay together. A ResNet run cannot overwrite a ViT or EfficientNet run.
 
 ## Configuration
 
@@ -193,7 +208,7 @@ Change the configuration:
 ```yaml
 inference:
   backend: onnx
-  onnx_model: artifacts/quickstart/model.onnx
+  onnx_model: artifacts/quickstart/resnet50-frozen/model.onnx
 ```
 
 Then run the same API or benchmark command. Dynamic batch axes are included in the ONNX graph.
@@ -225,8 +240,8 @@ After ONNX export, use `scripts/build_tensorrt.py` in an NVIDIA TensorRT environ
 
 ```bash
 python scripts/build_tensorrt.py \
-  --onnx artifacts/model.onnx \
-  --output artifacts/model-fp16.engine \
+  --onnx artifacts/resnet50/partial/model.onnx \
+  --output artifacts/resnet50/partial/model-fp16.engine \
   --precision fp16
 ```
 

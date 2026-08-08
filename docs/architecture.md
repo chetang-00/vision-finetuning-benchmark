@@ -39,3 +39,17 @@ Food-101
 
 Each checkpoint contains model weights, optimizer state, scheduler state, resolved configuration, class names, architecture, epoch, and validation score. This makes inference reproducible without hidden state.
 
+Artifacts are isolated by architecture and fine-tuning strategy:
+
+```text
+artifacts/<model>/<strategy>/
+├── best.pt
+├── last.pt
+├── history.json
+├── resolved_config.json
+├── evaluation.json
+├── benchmark-pytorch.json
+└── model.onnx
+```
+
+The quickstart is kept separately under `artifacts/quickstart/resnet50-frozen/`. The matrix generator updates the training output, inference checkpoint, and ONNX destination together so paths cannot drift between stages.

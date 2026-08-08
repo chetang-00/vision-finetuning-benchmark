@@ -1,14 +1,14 @@
 from __future__ import annotations
 
-from typing import Tuple
-
 from torchvision import transforms
 
 IMAGENET_MEAN = (0.485, 0.456, 0.406)
 IMAGENET_STD = (0.229, 0.224, 0.225)
 
 
-def build_transforms(image_size: int, augmentation: str) -> Tuple[transforms.Compose, transforms.Compose]:
+def build_transforms(
+    image_size: int, augmentation: str
+) -> tuple[transforms.Compose, transforms.Compose]:
     if augmentation not in {"none", "standard", "strong"}:
         raise ValueError("augmentation must be none, standard, or strong")
 
@@ -44,4 +44,3 @@ def build_transforms(image_size: int, augmentation: str) -> Tuple[transforms.Com
 
 def build_inference_transform(image_size: int) -> transforms.Compose:
     return build_transforms(image_size, "none")[1]
-

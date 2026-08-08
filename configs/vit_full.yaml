@@ -1,4 +1,8 @@
 _base_: base.yaml
+project:
+  name: foodvision-vit-b16-full
+  seed: 42
+  output_dir: artifacts/vit_b_16/full
 model:
   name: vit_b_16
   pretrained: true
@@ -21,4 +25,9 @@ training:
   mixup_alpha: 0.2
   cutmix_alpha: 1.0
   resume_from: null
-
+inference:
+  backend: pytorch
+  checkpoint: artifacts/vit_b_16/full/best.pt
+  onnx_model: artifacts/vit_b_16/full/model.onnx
+  top_k: 5
+  warmup_iterations: 5

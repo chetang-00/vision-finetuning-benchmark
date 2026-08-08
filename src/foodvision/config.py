@@ -11,7 +11,7 @@ import yaml
 class ProjectConfig:
     name: str = "foodvision-production-platform"
     seed: int = 42
-    output_dir: str = "artifacts"
+    output_dir: str = "artifacts/resnet50/partial"
 
 
 @dataclass
@@ -68,8 +68,8 @@ class TrackingConfig:
 @dataclass
 class InferenceConfig:
     backend: str = "pytorch"
-    checkpoint: str = "artifacts/best.pt"
-    onnx_model: str = "artifacts/model.onnx"
+    checkpoint: str = "artifacts/resnet50/partial/best.pt"
+    onnx_model: str = "artifacts/resnet50/partial/model.onnx"
     top_k: int = 5
     warmup_iterations: int = 5
 
