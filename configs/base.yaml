@@ -1,0 +1,55 @@
+project:
+  name: foodvision-production-platform
+  seed: 42
+  output_dir: artifacts
+
+data:
+  root: data
+  dataset: food101
+  image_size: 224
+  batch_size: 32
+  num_workers: 4
+  val_fraction: 0.1
+  download: true
+  subset_fraction: 1.0
+  augmentation: strong
+
+model:
+  name: resnet50
+  pretrained: true
+  num_classes: 101
+  fine_tune: partial
+  unfreeze_blocks: 1
+  dropout: 0.2
+  gradient_checkpointing: false
+
+training:
+  epochs: 20
+  learning_rate: 0.0003
+  backbone_learning_rate: 0.00003
+  weight_decay: 0.05
+  label_smoothing: 0.1
+  accumulation_steps: 1
+  gradient_clip_norm: 1.0
+  precision: auto
+  warmup_epochs: 2
+  early_stopping_patience: 5
+  mixup_alpha: 0.2
+  cutmix_alpha: 1.0
+  resume_from: null
+
+tracking:
+  mlflow: true
+  mlflow_uri: file:./mlruns
+  experiment_name: foodvision-food101
+  tensorboard: true
+  wandb: false
+  wandb_project: foodvision-production-platform
+
+inference:
+  backend: pytorch
+  checkpoint: artifacts/best.pt
+  onnx_model: artifacts/model.onnx
+  top_k: 5
+  warmup_iterations: 5
+

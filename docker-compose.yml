@@ -1,0 +1,34 @@
+services:
+  foodvision-cpu:
+    profiles: ["cpu"]
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.cpu
+    ports:
+      - "8000:8000"
+    environment:
+      FOODVISION_CONFIG: configs/quickstart.yaml
+      FOODVISION_CHECKPOINT: artifacts/best.pt
+    volumes:
+      - ./artifacts:/app/artifacts:ro
+
+  foodvision-cuda:
+    profiles: ["cuda"]
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.cuda
+    ports:
+      - "8000:8000"
+    environment:
+      FOODVISION_CONFIG: configs/base.yaml
+      FOODVISION_CHECKPOINT: artifacts/best.pt
+    volumes:
+      - ./artifacts:/app/artifacts:ro
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+

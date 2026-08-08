@@ -1,0 +1,24 @@
+_base_: base.yaml
+model:
+  name: vit_b_16
+  pretrained: true
+  num_classes: 101
+  fine_tune: full
+  unfreeze_blocks: 2
+  dropout: 0.1
+  gradient_checkpointing: false
+training:
+  epochs: 15
+  learning_rate: 0.0001
+  backbone_learning_rate: 0.00001
+  weight_decay: 0.05
+  label_smoothing: 0.1
+  accumulation_steps: 2
+  gradient_clip_norm: 1.0
+  precision: auto
+  warmup_epochs: 2
+  early_stopping_patience: 4
+  mixup_alpha: 0.2
+  cutmix_alpha: 1.0
+  resume_from: null
+

@@ -1,0 +1,55 @@
+project:
+  name: foodvision-quickstart
+  seed: 42
+  output_dir: artifacts/quickstart
+
+data:
+  root: data
+  dataset: food101
+  image_size: 224
+  batch_size: 16
+  num_workers: 2
+  val_fraction: 0.1
+  download: true
+  subset_fraction: 0.1
+  augmentation: standard
+
+model:
+  name: resnet50
+  pretrained: true
+  num_classes: 101
+  fine_tune: frozen
+  unfreeze_blocks: 1
+  dropout: 0.2
+  gradient_checkpointing: false
+
+training:
+  epochs: 3
+  learning_rate: 0.001
+  backbone_learning_rate: 0.0001
+  weight_decay: 0.01
+  label_smoothing: 0.1
+  accumulation_steps: 1
+  gradient_clip_norm: 1.0
+  precision: auto
+  warmup_epochs: 1
+  early_stopping_patience: 3
+  mixup_alpha: 0.0
+  cutmix_alpha: 0.0
+  resume_from: null
+
+tracking:
+  mlflow: false
+  mlflow_uri: file:./mlruns
+  experiment_name: foodvision-quickstart
+  tensorboard: true
+  wandb: false
+  wandb_project: foodvision-production-platform
+
+inference:
+  backend: pytorch
+  checkpoint: artifacts/quickstart/best.pt
+  onnx_model: artifacts/quickstart/model.onnx
+  top_k: 5
+  warmup_iterations: 3
+
