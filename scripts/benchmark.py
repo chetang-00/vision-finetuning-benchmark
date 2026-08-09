@@ -4,7 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 
-from benchmarks.inference import run_benchmark
+from foodvision.benchmarking import run_benchmark
 from foodvision.config import load_config
 
 

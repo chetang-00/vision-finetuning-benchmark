@@ -270,13 +270,13 @@ CI runs linting, tests, coverage, and a CPU-container build. Tests intentionally
 ## Repository layout
 
 ```text
-├── benchmarks/                 # repeatable inference measurements
 ├── configs/                    # quickstart, full, and model configurations
 ├── docker/                     # CPU and CUDA images
 ├── docs/                       # architecture, platform guides, model card
 ├── scripts/                    # operational entry points
 ├── src/foodvision/
 │   ├── api/                    # FastAPI service
+│   ├── benchmarking.py          # repeatable inference measurements
 │   ├── data/                   # Food-101 and transforms
 │   ├── evaluation/             # test reports and calibration
 │   ├── explainability/         # Grad-CAM

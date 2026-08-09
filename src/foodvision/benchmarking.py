@@ -21,6 +21,7 @@ def run_benchmark(
     iterations: int = 30,
     compile_model: bool = False,
 ) -> dict[str, Any]:
+    """Measure raw model-inference performance for one configured experiment."""
     predictor = Predictor(config, compile_model=compile_model)
     results = []
     for batch_size in batch_sizes:
