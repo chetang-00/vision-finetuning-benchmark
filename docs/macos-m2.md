@@ -8,7 +8,7 @@ Use Python 3.11 in a native arm64 terminal. Create an isolated environment and i
 python3.11 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
-pip install -e ".[all]"
+python -m pip install ".[all]"
 ```
 
 Confirm that PyTorch sees Metal:

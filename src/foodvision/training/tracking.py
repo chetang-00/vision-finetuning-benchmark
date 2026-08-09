@@ -25,7 +25,8 @@ class ExperimentTracker:
             try:
                 import mlflow
             except ImportError as exc:
-                raise RuntimeError("Install tracking extras: pip install -e '.[tracking]'") from exc
+                message = "Install tracking extras: python -m pip install '.[tracking]'"
+                raise RuntimeError(message) from exc
             mlflow.set_tracking_uri(self.config.tracking.mlflow_uri)
             mlflow.set_experiment(self.config.tracking.experiment_name)
             mlflow.start_run(run_name=self.run_name)

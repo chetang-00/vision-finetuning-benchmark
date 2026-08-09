@@ -58,7 +58,7 @@ class TrainingConfig:
 @dataclass
 class TrackingConfig:
     mlflow: bool = True
-    mlflow_uri: str = "file:./mlruns"
+    mlflow_uri: str = "sqlite:///mlflow.db"
     experiment_name: str = "foodvision-food101"
     tensorboard: bool = True
     wandb: bool = False

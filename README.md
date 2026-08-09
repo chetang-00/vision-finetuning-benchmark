@@ -53,7 +53,7 @@ cd foodvision-production-platform
 python3.11 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
-pip install -e ".[all]"
+python -m pip install ".[all]"
 ```
 
 Confirm MPS availability:
@@ -164,7 +164,7 @@ The automatic precision mode uses FP16 autocast on CUDA and conservative FP32 on
 The default full configuration enables MLflow and TensorBoard. Start the MLflow UI after training:
 
 ```bash
-mlflow ui --backend-store-uri ./mlruns --port 5000
+mlflow ui --backend-store-uri sqlite:///mlflow.db --port 5000
 ```
 
 ```bash

@@ -1,10 +1,10 @@
 .PHONY: install install-all data train evaluate api benchmark export test lint format docker-cpu docker-cuda
 
 install:
-	python -m pip install -e ".[dev,tracking,onnx]"
+	python -m pip install ".[dev,tracking,onnx]"
 
 install-all:
-	python -m pip install -e ".[all]"
+	python -m pip install ".[all]"
 
 data:
 	python scripts/download_data.py --config configs/quickstart.yaml

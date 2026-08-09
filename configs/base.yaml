@@ -40,7 +40,9 @@ training:
 
 tracking:
   mlflow: true
-  mlflow_uri: file:./mlruns
+  # MLflow 3.x requires a database backend; this local SQLite file is created
+  # automatically beside the project when you run a tracked experiment.
+  mlflow_uri: sqlite:///mlflow.db
   experiment_name: foodvision-food101
   tensorboard: true
   wandb: false

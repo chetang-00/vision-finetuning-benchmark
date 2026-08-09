@@ -72,7 +72,7 @@ class Predictor:
         try:
             import onnxruntime as ort
         except ImportError as exc:
-            raise RuntimeError("Install ONNX extras: pip install -e '.[onnx]'") from exc
+            raise RuntimeError("Install ONNX extras: python -m pip install '.[onnx]'") from exc
         path = Path(self.config.inference.onnx_model)
         if not path.exists():
             raise FileNotFoundError(f"ONNX model not found: {path}. Export the model first.")

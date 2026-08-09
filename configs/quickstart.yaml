@@ -40,7 +40,7 @@ training:
 
 tracking:
   mlflow: false
-  mlflow_uri: file:./mlruns
+  mlflow_uri: sqlite:///mlflow.db
   experiment_name: foodvision-quickstart
   tensorboard: true
   wandb: false
