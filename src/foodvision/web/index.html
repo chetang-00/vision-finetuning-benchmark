@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>FoodVision — Production Image Intelligence</title>
+  <title>Vision Fine-Tuning Benchmark — Image Classification</title>
   <style>
     :root { color-scheme: dark; --bg:#07110f; --card:#0e1c18; --line:#223a32; --mint:#72f1b8; --text:#eefaf5; --muted:#9bb4aa; --danger:#ff8a8a; }
     * { box-sizing:border-box; }
@@ -39,9 +39,9 @@
 </head>
 <body>
 <main>
-  <nav><div class="brand">Food<span>Vision</span></div><div class="status" id="status">Checking model…</div></nav>
-  <h1>See food.<br><em>Know it.</em></h1>
-  <p class="lede">A production computer-vision system trained across 101 food categories. Upload an image to inspect top predictions, confidence, and inference performance.</p>
+  <nav><div class="brand">Vision<span>Benchmark</span></div><div class="status" id="status">Checking model…</div></nav>
+  <h1>Compare models.<br><em>Measure results.</em></h1>
+  <p class="lede">An image-classification benchmark spanning CNN and Transformer architectures, fine-tuning strategies, evaluation metrics, and inference performance. Upload an image to inspect its top predictions and confidence.</p>
   <section class="grid">
     <div class="card">
       <label class="drop" id="drop" for="file">
@@ -56,7 +56,7 @@
       <div id="results" class="empty">Predictions will appear here.</div>
     </div>
   </section>
-  <footer>FoodVision Production Platform · PyTorch / MPS / CUDA / ONNX</footer>
+  <footer>Vision Fine-Tuning Benchmark · PyTorch / MPS / CUDA / ONNX</footer>
 </main>
 <script>
   const file = document.querySelector('#file'), drop = document.querySelector('#drop'), preview = document.querySelector('#preview');
@@ -70,4 +70,3 @@
 </script>
 </body>
 </html>
-
