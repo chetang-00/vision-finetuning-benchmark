@@ -1,6 +1,6 @@
-# FoodVision Production Platform
+# Vision Fine-Tuning Benchmark
 
-A production-oriented Food-101 image-classification system covering reproducible training, transfer-learning experiments, model evaluation, explainability, inference optimization, API deployment, and performance benchmarking.
+A reproducible deep-learning benchmark comparing CNN and Vision Transformer architectures across frozen, partial, and full fine-tuning strategies. It includes model evaluation, explainability, inference optimization, API deployment, and hardware performance measurements.
 
 This repository is designed to answer a complete engineering question:
 
@@ -49,7 +49,7 @@ More detail is available in [docs/architecture.md](docs/architecture.md).
 Python 3.11 is recommended. The system Python on older macOS installations may be too old.
 
 ```bash
-cd foodvision-production-platform
+cd vision-finetuning-benchmark
 python3.11 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
@@ -80,25 +80,27 @@ Evaluate the best checkpoint:
 python scripts/evaluate.py --config configs/quickstart.yaml --device mps
 ```
 
-Start the application:
+Start the application with the quickstart ResNet50 checkpoint:
 
 ```bash
-uvicorn foodvision.api.main:app --host 0.0.0.0 --port 8000
+FOODVISION_CONFIG=configs/quickstart.yaml \
+FOODVISION_DEVICE=mps \
+uvicorn foodvision.api.main:app --host 127.0.0.1 --port 8000
 ```
 
-Open `http://localhost:8000`. API documentation is available at `http://localhost:8000/docs`.
+Open `http://127.0.0.1:8000`. API documentation is available at `http://127.0.0.1:8000/docs`.
 
 See [docs/macos-m2.md](docs/macos-m2.md) for memory and precision guidance.
 
 ## Full experiment plan
 
-Generate the 4 × 3 model/fine-tuning matrix:
+The repository includes a 4 × 3 model/fine-tuning matrix under `configs/generated/`. Regenerate those files after changing `configs/base.yaml` with:
 
 ```bash
 python scripts/run_experiment_matrix.py --base configs/base.yaml
 ```
 
-This creates twelve configurations under model-specific folders in `configs/generated/`:
+This creates or refreshes twelve configurations under model-specific folders in `configs/generated/`:
 
 | Architecture | Frozen | Partial | Full |
 |---|---:|---:|---:|
@@ -135,6 +137,24 @@ artifacts/
 ```
 
 Training checkpoints, evaluation reports, benchmarks, and ONNX exports for one experiment stay together. A ResNet run cannot overwrite a ViT or EfficientNet run.
+
+## Pretrained weights and trained checkpoints
+
+With `model.pretrained: true`, `timm` downloads the original ImageNet weights once and stores them in the shared Hugging Face cache, normally under:
+
+```text
+~/.cache/huggingface/hub/models--timm--<model-name>/
+```
+
+That cache persists across terminal sessions and Mac restarts and can be reused by other projects running as the same user. It is not committed to this repository.
+
+Training saves the complete experiment checkpoint separately:
+
+```text
+artifacts/<architecture>/<fine-tuning-strategy>/best.pt
+```
+
+`best.pt` contains the complete model state, Food-101 class list, resolved configuration, optimizer state, scheduler state, epoch, and best validation score. Even a frozen-backbone run saves the whole model so inference does not depend on separately copying the cached pretrained file.
 
 ## Configuration
 
@@ -176,6 +196,16 @@ W&B is opt-in. Set `tracking.wandb: true`, authenticate through W&B, and keep cr
 Each run tracks configuration, train/validation loss, Top-1, Top-5, learning rate, checkpoints, and training history. Evaluation generates macro metrics, expected calibration error, per-class metrics, and a confusion matrix.
 
 ## API
+
+One API process loads one model during startup. Select the model with `FOODVISION_CONFIG`; the referenced checkpoint must already exist. For example, serve the full-data ResNet50 frozen experiment with:
+
+```bash
+FOODVISION_CONFIG=configs/generated/resnet50/frozen.yaml \
+FOODVISION_DEVICE=mps \
+uvicorn foodvision.api.main:app --host 127.0.0.1 --port 8000
+```
+
+To switch to another architecture or fine-tuning strategy, stop Uvicorn with `Ctrl+C` and restart it with another configuration, such as `configs/generated/vit_b_16/full.yaml`. Use `GET /models` to confirm the active architecture, backend, and fine-tuning strategy.
 
 | Method | Route | Purpose |
 |---|---|---|
@@ -225,6 +255,8 @@ python scripts/benchmark.py \
 ```
 
 The report includes mean, p50, p95, p99, images/sec, process RSS, and accelerator memory. Accelerator synchronization prevents misleading asynchronous timings.
+
+The benchmark uses generated input tensors and measures raw model execution. It does not include JPEG decoding, image preprocessing, HTTP transfer, or browser time.
 
 Use the same model weights, precision, image size, and hardware when comparing backends. Full methodology is in [docs/benchmarking.md](docs/benchmarking.md).
 
@@ -291,6 +323,30 @@ CI runs linting, tests, coverage, and a CPU-container build. Tests intentionally
 ## Responsible use
 
 The classifier is not an ingredient detector and must not be used for allergy, medical, food-safety, or religious-diet decisions. It is a closed-set model and will force unknown inputs into one of 101 known classes. See [docs/model-card.md](docs/model-card.md).
+
+## Measured quickstart baseline
+
+The following values were generated by the included scripts on an Apple M2 Pro using PyTorch MPS. This is a pipeline-validation baseline trained for three epochs on 10% of Food-101 with a frozen ResNet50 backbone; it is not the final full-dataset comparison.
+
+### Model quality
+
+| Metric | Result |
+|---|---:|
+| Test samples | 2,525 |
+| Test Top-1 accuracy | 32.24% |
+| Test Top-5 accuracy | 60.91% |
+| Macro F1 | 29.34% |
+| Expected calibration error | 0.2789 |
+
+### Raw PyTorch MPS inference
+
+| Batch | Mean latency | p95 latency | Throughput | Accelerator memory |
+|---:|---:|---:|---:|---:|
+| 1 | 6.67 ms | 6.90 ms | 149.9 images/s | 91.5 MB |
+| 8 | 30.89 ms | 31.40 ms | 259.0 images/s | 98.7 MB |
+| 16 | 60.64 ms | 61.11 ms | 263.9 images/s | 102.9 MB |
+
+Published model comparisons should use the full dataset, a fixed seed and split, the same hardware and precision, and identical benchmark settings across architectures.
 
 ## Suggested published results
 
